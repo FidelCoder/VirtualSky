@@ -44,3 +44,8 @@ const SkyVisualization = () => {
 };
 
 export default SkyVisualization;
+
+
+
+
+// the 3D visualization within the SocialFeatures.js component has a black background, and it is displayed as a block element with a fixed height. The canvas has a margin and a border-radius to make it look more appealing.
