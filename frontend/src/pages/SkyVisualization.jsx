@@ -1,20 +1,19 @@
 import React, { useRef } from 'react';
 import { Canvas } from 'react-three-fiber';
-import { Stars, Skybox, Sphere, OrbitControls } from '@react-three/drei';
+import { Stars, Sky as Skybox, Sphere, OrbitControls } from '@react-three/drei';
 import { TextureLoader } from 'three';
 
-// Import custom planet textures
-import earthTexture from './textures/earth.jpg';
-import moonTexture from './textures/moon.jpg';
-import sunTexture from './textures/sun.jpg';
+const earthTextureUrl = 'https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg';
+const moonTextureUrl = 'https://threejs.org/examples/textures/moon_1024.jpg';
+const sunTextureUrl = 'https://threejs.org/examples/textures/lava.jpg';
+
+const textureLoader = new TextureLoader();
+const earthMap = textureLoader.load(earthTextureUrl);
+const moonMap = textureLoader.load(moonTextureUrl);
+const sunMap = textureLoader.load(sunTextureUrl);
 
 const SkyVisualization = () => {
   const cameraRef = useRef();
-
-  // Load textures
-  const earthMap = new TextureLoader().load(earthTexture);
-  const moonMap = new TextureLoader().load(moonTexture);
-  const sunMap = new TextureLoader().load(sunTexture);
 
   return (
     <Canvas>
