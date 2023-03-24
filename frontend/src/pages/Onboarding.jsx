@@ -54,3 +54,6 @@ const Onboarding = ({ children }) => {
 export default Onboarding;
 
 //when a user opens the application, they will be guided through an interactive onboarding experience showcasing the app's features. The tour will highlight different elements of the app and provide explanations for each feature.
+
+
+//This component display the user's achievements and badges, as well as their in-app currency balance.
