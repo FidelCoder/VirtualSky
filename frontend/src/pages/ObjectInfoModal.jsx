@@ -10,7 +10,7 @@ const sunTexture = 'https://images.unsplash.com/photo-1475787003832-fc89532c2e2b
 const saturnTexture = 'https://images.unsplash.com/photo-1569233327943-28a982c386bb';
 const marsTexture = 'https://images.unsplash.com/photo-1529473817277-5a810fda9668';
 
-const SkyVisualization = () => {
+const ObjectInfoModal = (props) => {
   const cameraRef = useRef();
   const [objects, setObjects] = useState([
     {
@@ -69,8 +69,8 @@ const SkyVisualization = () => {
   const earthMap = new TextureLoader().load(earthTexture);
   const moonMap = new TextureLoader().load(moonTexture);
   const sunMap = new TextureLoader().load(sunTexture);
-  const saturnMap = new TextureLoader
-
+  const saturnMap = new TextureLoader().load(saturnTexture);
+  const marsMap = new TextureLoader().load(marsTexture);
 
   return (
     <div className="object-info-modal">

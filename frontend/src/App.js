@@ -1,28 +1,43 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import SkyVisualization from './pages/SkyVisualization';
-import Home from "./pages/Home";
-import ObjectInfoModal from "./pages/ObjectInfoModal";
-import './App.css';
+import { useContext } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
-const App = () => {
+import Layout from './components/Layout/Layout';
+import UserProfile from './components/Profile/UserProfile';
+import AuthPage from './pages/AuthPage';
+import HomePage from './pages/HomePage';
+import AuthContext from './store/auth-context';
+//import Dashboard from './pages/Dashboard';
+
+function App() {
+  const authCtx = useContext(AuthContext);
+
   return (
-    <Router>
-      <div className="app">
-        <div className="info">
-          <p>Explore the virtual sky by panning, zooming, and rotating the view.</p>
-        </div>
-        <div className="controls">
-          <p>Controls: Left-click and drag to rotate, scroll to zoom, right-click and drag to pan</p>
-        </div>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/visualization" component={SkyVisualization} />
-          <Route path="/infomodal" component={SkyVisualization} />
-        </Switch>
-      </div>
-    </Router>
+    <Layout>
+      <Switch>
+        <Route path='/' exact>
+          <HomePage />
+        </Route>
+        {!authCtx.isLoggedIn && (
+          <Route path='/auth'>
+            <AuthPage />
+          </Route>
+        )}
+        <Route path='/profile'>
+          {authCtx.isLoggedIn && <UserProfile />}
+          {!authCtx.isLoggedIn && <Redirect to='/auth' />}
+        </Route>
+
+        {/* <Route path='/Dashboard'>
+          {authCtx.isLoggedIn && <Dashboard />}
+          {!authCtx.isLoggedIn && <Redirect to='/dashboard' />}
+        </Route> */}
+
+        <Route path='*'>
+          <Redirect to='/' />
+        </Route>
+      </Switch>
+    </Layout>
   );
-};
+}
 
 export default App;
