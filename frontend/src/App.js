@@ -5,6 +5,7 @@ import Layout from './components/Layout/Layout';
 import UserProfile from './components/Profile/UserProfile';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
+import SkyVisualization from './pages/SkyVisualization';
 import AuthContext from './store/auth-context';
 //import Dashboard from './pages/Dashboard';
 
@@ -27,14 +28,18 @@ function App() {
           {!authCtx.isLoggedIn && <Redirect to='/auth' />}
         </Route>
 
-        {/* <Route path='/Dashboard'>
-          {authCtx.isLoggedIn && <Dashboard />}
-          {!authCtx.isLoggedIn && <Redirect to='/dashboard' />}
+        {/* <Route path='/SkyVisualization'>
+          {authCtx.isLoggedIn && <SkyVisualization />}
+          {!authCtx.isLoggedIn && <Redirect to='/visual' />}
         </Route> */}
 
-        <Route path='*'>
-          <Redirect to='/' />
+        <Route path='/visualization' exact>
+          <SkyVisualization />
         </Route>
+
+        {/* <Route path='*'>
+          <Redirect to='/' />
+        </Route> */}
       </Switch>
     </Layout>
   );
