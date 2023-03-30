@@ -55,9 +55,26 @@ import { Stars, Sky as Skybox, Sphere, OrbitControls, PerspectiveCamera } from '
 import { TextureLoader } from 'three';
 import { getSignByDate } from 'zodiac-signs';
 import "./visualization.css";
+//import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
+
+// // iyoioioij
+// const loader = new GLTFLoader();
+
+// loader.load( './public/models/Earth-planet.gltf', function ( gltf ) {
+
+// 	scene.add( gltf.scene );
+
+// }, undefined, function ( error ) {
+
+// 	console.error( error );
+
+// } );
+// //iuhoiujio
 
 const earthTextureUrl = 'https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg';
-const moonTextureUrl = 'https://threejs.org/examples/textures/moon_1024.jpg';
+const moonTextureUrl = 'https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg';
 const sunTextureUrl = 'https://threejs.org/examples/textures/lava.jpg';
 
 const textureLoader = new TextureLoader();

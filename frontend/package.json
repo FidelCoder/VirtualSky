@@ -9,6 +9,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "astrology": "^0.0.7",
+    "gltf-loader": "^1.0.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-countup": "^6.4.2",
@@ -22,6 +23,7 @@
     "reactstrap": "^9.1.6",
     "three": "^0.150.1",
     "web-vitals": "^1.1.2",
+    "zodiac-sign": "^1.2.2",
     "zodiac-signs": "^1.2.1"
   },
   "scripts": {
