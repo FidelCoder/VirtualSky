@@ -46,12 +46,17 @@ const MainNavigation = () => {
           </li>
           <li>
             <Link to="/courses" onClick={closeMenuHandler}>
-              Courses
+              Learn In The Space
             </Link>
           </li>
           <li>
             <Link to="/blog" onClick={closeMenuHandler}>
               Blog
+            </Link>
+          </li>
+          <li>
+            <Link to="/visualization" onClick={closeMenuHandler}>
+              Explore Space
             </Link>
           </li>
           {isLoggedIn && (
