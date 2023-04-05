@@ -45,7 +45,7 @@ const MainNavigation = () => {
             </Link>
           </li>
           <li>
-            <Link to="/courses" onClick={closeMenuHandler}>
+            <Link to="/infomodal" onClick={closeMenuHandler}>
               Learn In The Space
             </Link>
           </li>

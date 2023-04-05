@@ -6,6 +6,7 @@ import UserProfile from './components/Profile/UserProfile';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import SkyVisualization from './pages/SkyVisualization';
+import ObjectInfoModal from './pages/ObjectInfoModal'
 import AuthContext from './store/auth-context';
 //import Dashboard from './pages/Dashboard';
 
@@ -28,6 +29,11 @@ function App() {
           {!authCtx.isLoggedIn && <Redirect to='/auth' />}
         </Route>
 
+        <Route path='/infomodal'>
+          {authCtx.isLoggedIn && <ObjectInfoModal />}
+          {!authCtx.isLoggedIn && <Redirect to='/auth' />}
+        </Route>
+
         {/* <Route path='/SkyVisualization'>
           {authCtx.isLoggedIn && <SkyVisualization />}
           {!authCtx.isLoggedIn && <Redirect to='/visual' />}
@@ -37,9 +43,9 @@ function App() {
           <SkyVisualization />
         </Route>
 
-        {/* <Route path='*'>
+        <Route path='*'>
           <Redirect to='/' />
-        </Route> */}
+        </Route>
       </Switch>
     </Layout>
   );
