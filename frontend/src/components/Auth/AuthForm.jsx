@@ -10,6 +10,12 @@ const AuthForm = () => {
 
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+  //New Data Records
+  const dateBirthInputRef = useRef();
+  const locationInputRef = useRef();
+  const fullNameInputRef = useRef();
+  const userNameInputRef = useRef();
+
 
   const [isLogin, setIsLogin] = useState(true);
   const[isLoading, setIsLoading] = useState(false);
@@ -107,10 +113,22 @@ const AuthForm = () => {
  
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
+    //new data
+    const enteredFullname = fullNameInputRef.current.value;
+    const enteredUsername = userNameInputRef.current.value;
+    const enteredDatebirth = dateBirthInputRef.current.value;
+    const enteredLocation = locationInputRef.current.valeu;
+
  
     const userPayload = {
       email: enteredEmail,
       password: enteredPassword,
+      
+      // new data
+      fullname:enteredFullname,
+      username:enteredUsername,
+      date_of_birth:enteredDatebirth,
+
       returnSecureToken: true,
     };
  

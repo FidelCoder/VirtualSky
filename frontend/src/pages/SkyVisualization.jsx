@@ -47,7 +47,7 @@ const SkyVisualization = () => {
   };
 
   const models = [
-    '/assets/models/Constellations.gltf',
+    '/assets/models/Costellations.gltf',
     './assets/models/Clock_dial.gltf',
     './assets/models/Earth_planet.gltf',
     './assets/models/Jupiter_planet.gltf',
@@ -56,9 +56,9 @@ const SkyVisualization = () => {
     './assets/models/Neptune_planet.gltf',
     './assets/models/Pluto_planet.gltf',
     './assets/models/Saturn_planet.gltf',
-    './assets/models/10.gltf',
-    './assets/models/11.gltf',
-    './assets/models/12.gltf',
+    './assets/models/Uranus_planet.gltf',
+    './assets/models/Venus_planet.gltf',
+    './assets/models/Zodiac_signs.gltf',
   ];
 
   const modelPositions = models.map((_, index) => {

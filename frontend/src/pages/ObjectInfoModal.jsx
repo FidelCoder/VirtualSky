@@ -10,6 +10,9 @@ import courseImg03 from "../assests/images/seo.png";
 import courseImg04 from "../assests/images/ui-ux.png";
 import "./ObjectInfoModal.css";
 
+//import ConstellationsModel from "Costellations.gltf";
+
+
 const freeCourseData = [
   {
     id: "01",
@@ -17,7 +20,7 @@ const freeCourseData = [
     imgUrl: courseImg01,
     students: 5.3,
     rating: 1.7,
-    modelUrl: "path/to/3d-model-01.gltf",
+    modelUrl : 'Costellations.gltf',
   },
   // ... other courses with their respective model URLs
 ];
