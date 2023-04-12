@@ -25,50 +25,6 @@ const AuthForm = () => {
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
-
-/*   const submitHandler = (e) => {
-    e.preventDefault();
-
-    const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = passwordInputRef.current.value; 
-
-    //option validation
-    setIsLoading(true)
-    if(isLogin){
-
-    }else{
-        fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDCUkZQw4kcRhlZPru0_tSXf68cstvkcAg',{
-            method: 'POST',
-            body: JSON.stringify({
-                email: enteredEmail,
-                password: enteredPassword,
-                returnSecureToken: true
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then( (res) => {
-            setIsLoading(false);
-            if(res.ok){
-                //..
-            }else{
-                return res.json().then((data) => {
-                    //error modal optional
-
-                    // let errorMessage = 'Authentication Failed'
-                    //if (data && data.error && data.error.message) {
-                        //errorMessage = data.error.message;
-                    //} 
-                    console.log(data)
-                    const errorMessage = data?.error?.message || 'Authentication failed!';
-                    alert(errorMessage)
-                })
-            }
-        })
-    }
-  } */
-
-
   const sendRequest = async (operationName, payload) => {
     const targetUrl = `https://identitytoolkit.googleapis.com/v1/accounts:${operationName}?key=AIzaSyDCUkZQw4kcRhlZPru0_tSXf68cstvkcAg`;
  
@@ -117,7 +73,7 @@ const AuthForm = () => {
     const enteredFullname = fullNameInputRef.current.value;
     const enteredUsername = userNameInputRef.current.value;
     const enteredDatebirth = dateBirthInputRef.current.value;
-    const enteredLocation = locationInputRef.current.valeu;
+    const enteredLocation = locationInputRef.current.value;
 
  
     const userPayload = {
