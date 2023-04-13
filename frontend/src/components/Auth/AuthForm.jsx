@@ -81,9 +81,10 @@ const AuthForm = () => {
       password: enteredPassword,
       
       // new data
-      fullname:enteredFullname,
-      username:enteredUsername,
-      date_of_birth:enteredDatebirth,
+      fullname: enteredFullname,
+      username: enteredUsername,
+      date_of_birth: enteredDatebirth,
+      location: enteredLocation,
 
       returnSecureToken: true,
     };
@@ -99,13 +100,35 @@ const AuthForm = () => {
     <section className={classes.auth}>
       <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
       <form onSubmit = {submitHandler}>
+        
+        <div className={classes.control}>
+          <label htmlFor='fullname'>Your Fullname</label>
+          <input type='text' id='fullname' placeholder='fullname' required ref = {fullNameInputRef}/>
+        </div>
+
+        <div className={classes.control}>
+          <label htmlFor='username'>Your Username</label>
+          <input type='text' id='username' placeholder='username' required ref = {userNameInputRef}/>
+        </div>
+
+        <div className={classes.control}>
+          <label htmlFor='location'>Your Country</label>
+          <input type='text' id='location' placeholder='Country' required ref = {locationInputRef}/>
+        </div>
+
+        <div className={classes.control}>
+          <label htmlFor='date_of_birth'>Date Of Birth</label>
+          <input type='text' id='date_of_birth' placeholder='Date Of Birth' required ref = {dateBirthInputRef}/>
+        </div>
+
         <div className={classes.control}>
           <label htmlFor='email'>Your Email</label>
-          <input type='email' id='email' required ref = {emailInputRef}/>
+          <input type='email' id='email' placeholder='email' required ref = {emailInputRef}/>
         </div>
+
         <div className={classes.control}>
           <label htmlFor='password'>Your Password</label>
-          <input type='password' id='password' required ref = {passwordInputRef} />
+          <input type='password' id='password' placeholder='password' required ref = {passwordInputRef} />
         </div>
         <div className={classes.actions}>
           {!isLoading && <button>{isLogin ? 'Login' : 'Create Account'}</button>}
