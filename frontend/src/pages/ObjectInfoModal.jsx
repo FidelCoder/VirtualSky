@@ -1,28 +1,22 @@
 // export default ObjectInfoModal;
-import React, { useState, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Canvas } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useLoader } from "@react-three/fiber";
-import courseImg01 from "../assests/images/web-development.png";
-import courseImg02 from "../assests/images/kids-learning.png";
-import courseImg03 from "../assests/images/seo.png";
-import courseImg04 from "../assests/images/ui-ux.png";
+import axios from "axios";
 import "./ObjectInfoModal.css";
+import styles from "./ObjectInfoModal.css";
+import generateCourses from './openai';
 
-//import ConstellationsModel from "Costellations.gltf";
 
 
-const freeCourseData = [
-  {
-    id: "01",
-    title: "Basic Web Development Course",
-    imgUrl: courseImg01,
-    students: 5.3,
-    rating: 1.7,
-    modelUrl : 'Costellations.gltf',
-  },
-  // ... other courses with their respective model URLs
+const interestsList = [
+  "Astronomy",
+  "Astrobiology",
+  "Astrophysics",
+  "Space Exploration",
+  "Cosmology",
 ];
 
 const Model = ({ url }) => {
@@ -32,7 +26,7 @@ const Model = ({ url }) => {
 
 const FreeCourseCard = ({ item }) => {
   return (
-    <div className="free-course-card">
+    <div className={`free-course-card ${styles.freeCourseCard}`}>
       <Canvas camera={{ position: [0, 0, 5], fov: 40 }}>
         <ambientLight />
         <Suspense fallback={null}>
@@ -49,14 +43,96 @@ const FreeCourseCard = ({ item }) => {
   );
 };
 
+
+
+const InterestSelection = ({ onInterestSelected }) => {
+  const [selectedInterests, setSelectedInterests] = useState([]);
+
+  const handleInterestChange = (event) => {
+    const { options } = event.target;
+    const selectedOptions = Array.from(options)
+      .filter((option) => option.selected)
+      .map((option) => option.value);
+    setSelectedInterests(selectedOptions);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onInterestSelected(selectedInterests);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="input-group">
+        <select
+          className="form-select"
+          multiple
+          value={selectedInterests}
+          onChange={handleInterestChange}
+        >
+          {interestsList.map((interest) => (
+            <option key={interest} value={interest}>
+              {interest}
+            </option>
+          ))}
+        </select>
+        <button className="btn btn-primary" type="submit">
+          Submit Interests
+        </button>
+      </div>
+      <Row className="selected-interests-grid mt-3">
+        {selectedInterests.map((interest) => (
+          <Col
+            key={interest}
+            xs="6"
+            sm="4"
+            md="3"
+            lg="2"
+            className="mb-3 text-center"
+          >
+            <div className="interest-tile">
+              {interest}
+            </div>
+          </Col>
+        ))}
+      </Row>
+    </form>
+  );
+};
+
 const FreeCourse = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedInterests, setSelectedInterests] = useState([]);
+  const [submittedInterests, setSubmittedInterests] = useState([]);
+  const [generatedCourseData, setGeneratedCourseData] = useState([]);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredCourses = freeCourseData.filter((item) =>
+  const handleInterestSelection = (interest) => {
+    setSelectedInterests([...selectedInterests, interest]);
+  };
+
+  
+
+  const handleSubmitInterests = () => {
+    console.log('Submitted interests:', selectedInterests);
+    setSubmittedInterests(selectedInterests);
+    setSelectedInterests([]);
+  };
+  
+
+  useEffect(() => {
+    if (selectedInterests.length > 0) {
+      (async () => {
+        const newGeneratedCourses = await generateCourses(selectedInterests);
+        setGeneratedCourseData(newGeneratedCourses);
+      })();
+    }
+  }, [selectedInterests]);
+
+  const filteredCourses = generatedCourseData.filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -85,6 +161,24 @@ const FreeCourse = () => {
             </form>
           </Col>
 
+          <Col lg="12" className="mb-4">
+            <InterestSelection
+              selectedInterests={selectedInterests}
+              onInterestSelected={handleInterestSelection}
+              onSubmitInterests={handleSubmitInterests}
+            />
+          </Col>
+
+          <Col lg="12" className="mb-4">
+            <Row>
+              {submittedInterests.map((interest, index) => (
+                <Col key={index} lg="3" md="4" className="interest-grid">
+                  {interest}
+                </Col>
+              ))}
+            </Row>
+          </Col>
+
           {filteredCourses.map((item) => (
             <Col lg="3" md="4" className="mb-4" key={item.id}>
               <FreeCourseCard item={item} />
@@ -100,6 +194,10 @@ const FreeCourse = () => {
 };
 
 export default FreeCourse;
+
+  
+//modelUrl: "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf",
+
 //###################################################################
 // import React, { useState, Suspense } from "react";
 // import { Container, Row, Col } from "reactstrap";

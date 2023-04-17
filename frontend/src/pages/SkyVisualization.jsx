@@ -47,18 +47,18 @@ const SkyVisualization = () => {
   };
 
   const models = [
-    '/assets/models/Costellations.gltf',
-    './assets/models/Clock_dial.gltf',
-    './assets/models/Earth_planet.gltf',
-    './assets/models/Jupiter_planet.gltf',
-    './assets/models/Mars_planet.gltf',
-    './assets/models/Mercury_planet.gltf',
-    './assets/models/Neptune_planet.gltf',
-    './assets/models/Pluto_planet.gltf',
-    './assets/models/Saturn_planet.gltf',
-    './assets/models/Uranus_planet.gltf',
-    './assets/models/Venus_planet.gltf',
-    './assets/models/Zodiac_signs.gltf',
+    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
+    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
+    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
+    // './assets/models/Jupiter_planet.gltf',
+    // './assets/models/Mars_planet.gltf',
+    // './assets/models/Mercury_planet.gltf',
+    // './assets/models/Neptune_planet.gltf',
+    // './assets/models/Pluto_planet.gltf',
+    // './assets/models/Saturn_planet.gltf',
+    // './assets/models/Uranus_planet.gltf',
+    // './assets/models/Venus_planet.gltf',
+    // './assets/models/Zodiac_signs.gltf',
   ];
 
   const modelPositions = models.map((_, index) => {
