@@ -8,6 +8,7 @@ import axios from "axios";
 import "./ObjectInfoModal.css";
 import styles from "./ObjectInfoModal.css";
 import generateCourses from './openai';
+import { useMemo } from "react";
 
 
 
@@ -20,9 +21,21 @@ const interestsList = [
 ];
 
 const Model = ({ url }) => {
-  const gltf = useLoader(GLTFLoader, url);
+  const gltf = useMemo(() => {
+    if (!url) {
+      console.error("URL is not defined for this model.");
+      return null;
+    }
+    return useLoader(GLTFLoader, url);
+  }, [url]);
+
+  if (!gltf) {
+    return null;
+  }
+
   return <primitive object={gltf.scene} dispose={null} />;
 };
+
 
 const FreeCourseCard = ({ item }) => {
   return (
