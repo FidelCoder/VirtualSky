@@ -8,7 +8,7 @@ import axios from "axios";
 import "./ObjectInfoModal.css";
 import styles from "./ObjectInfoModal.css";
 import generateCourses from './openai';
-import { useMemo } from "react";
+//import React, { useState, useEffect } from "react";
 
 
 
@@ -20,13 +20,21 @@ const interestsList = [
   "Cosmology",
 ];
 
+
 const Model = ({ url }) => {
-  const gltf = useMemo(() => {
+  const [gltf, setGltf] = useState(null);
+
+  useEffect(() => {
     if (!url) {
       console.error("URL is not defined for this model.");
-      return null;
+      return;
     }
-    return useLoader(GLTFLoader, url);
+
+    const loader = new GLTFLoader();
+
+    loader.load(url, (loadedGltf) => {
+      setGltf(loadedGltf);
+    });
   }, [url]);
 
   if (!gltf) {
