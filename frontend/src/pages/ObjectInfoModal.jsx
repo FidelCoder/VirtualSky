@@ -77,9 +77,17 @@ const InterestSelection = ({ onInterestSelected }) => {
     setSelectedInterests(selectedOptions);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     onInterestSelected(selectedInterests);
+
+    try {
+      await axios.post('http://localhost:5000/api/interests', {
+        interests: selectedInterests,
+      });
+    } catch (error) {
+      console.error('Error saving interests:', error);
+    }
   };
 
   return (

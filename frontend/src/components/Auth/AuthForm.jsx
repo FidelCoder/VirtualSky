@@ -23,9 +23,10 @@ const AuthForm = () => {
     setIsLogin((prevState) => !prevState);
   };
 
+  // new changes to be added
   const sendRequest = async (operationName, payload) => {
     const targetUrl = `https://identitytoolkit.googleapis.com/v1/accounts:${operationName}?key=AIzaSyDCUkZQw4kcRhlZPru0_tSXf68cstvkcAg`;
-
+  
     try {
       setIsLoading(true);
       const res = await fetch(targetUrl, {
@@ -35,11 +36,36 @@ const AuthForm = () => {
           'Content-Type': 'application/json',
         },
       });
-
+  
       if (res.ok) {
         const data = await res.json();
         setIsLoading(false);
         const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
+  
+        if (!isLogin) {
+          const userData = {
+            //userId: data.localId,
+            email: payload.email,
+            password: payload.password,
+            fullname: payload.fullname,
+            username: payload.username,
+            date_of_birth: payload.date_of_birth,
+            location: payload.location,
+          };
+          console.log('User data:', userData);
+
+  
+          // Send user data to your server
+          //Replace 'http://localhost:5000/api/users/register' with your actual server URL.
+          await fetch('http://localhost:5000/signup', {
+            method: 'POST',
+            body: JSON.stringify(userData),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+        }
+  
         authCtx.login(data.idToken, expirationTime.toISOString());
         history.replace('/');
       } else {
@@ -52,6 +78,7 @@ const AuthForm = () => {
       alert(err.message);
     }
   };
+  //end of the new changes 
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -112,7 +139,7 @@ const AuthForm = () => {
   
             <div className={classes.control}>
               <label htmlFor='date_of_birth'>Date Of Birth</label>
-              <input type='text' id='date_of_birth' placeholder='Date Of Birth' required ref={dateBirthInputRef} />
+              <input type='date' id='date_of_birth' placeholder='Date Of Birth' required ref={dateBirthInputRef} />
             </div>
           </>
         )}
