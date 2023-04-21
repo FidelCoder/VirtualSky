@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 let logoutTimer;
-
 const AuthContext = React.createContext({
   token: "",
   isLoggedIn: false,
+  userId: null,
   userData: null,
   login: (token) => {},
   logout: () => {},
+  setUserId: (userId) => {},
   setUserData: (userData) => {},
 });
 
@@ -47,12 +48,14 @@ export const AuthContextProvider = (props) => {
   }
 
   const [token, setToken] = useState(initialToken);
+  const [userId, setUserId] = useState(null); // Add state for userId
   const [userData, setUserData] = useState(null);
 
   const userIsLoggedIn = !!token;
 
   const logoutHandler = useCallback(() => {
     setToken(null);
+    setUserId(null); // Clear userId on logout
     localStorage.removeItem("token");
     localStorage.removeItem("expirationTime");
 
@@ -61,14 +64,30 @@ export const AuthContextProvider = (props) => {
     }
   }, []);
 
-  const loginHandler = (token, expirationTime) => {
+  // const loginHandler = (token, expirationTime) => {
+  //   setToken(token);
+  //   localStorage.setItem("token", token);
+  //   localStorage.setItem("expirationTime", expirationTime);
+
+  //   const remainingTime = calculateRemainingTime(expirationTime);
+
+  //   logoutTimer = setTimeout(logoutHandler, remainingTime);
+  // };
+
+  const loginHandler = (token, userId, expirationTime) => {
     setToken(token);
+    setUserId(userId);
     localStorage.setItem("token", token);
+    localStorage.setItem("userId", userId);
     localStorage.setItem("expirationTime", expirationTime);
-
+  
     const remainingTime = calculateRemainingTime(expirationTime);
-
+  
     logoutTimer = setTimeout(logoutHandler, remainingTime);
+  };
+  
+  const setUserIdHandler = (userId) => {
+    setUserId(userId);
   };
 
   const setUserDataHandler = (userData) => {
@@ -81,15 +100,26 @@ export const AuthContextProvider = (props) => {
     }
   }, [tokenData, logoutHandler]);
 
+  // const contextValue = {
+  //   token: token,
+  //   isLoggedIn: userIsLoggedIn,
+  //   userId: userId, // Add userId to the context value
+  //   userData: userData,
+  //   login: loginHandler,
+  //   logout: logoutHandler,
+  //   setUserId: setUserIdHandler, // Add setUserId to the context value
+  //   setUserData: setUserDataHandler,
+  // };
+
   const contextValue = {
     token: token,
     isLoggedIn: userIsLoggedIn,
-    userData: userData,
+    userId: userId,
     login: loginHandler,
     logout: logoutHandler,
     setUserData: setUserDataHandler,
   };
-
+  
   return (
     <AuthContext.Provider value={contextValue}>{props.children}</AuthContext.Provider>
   );

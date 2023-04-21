@@ -1,0 +1,40 @@
+.container {
+    margin-top: 5rem;
+  }
+  
+  .card {
+    max-width: 700px;
+    margin: auto;
+    border-radius: 15px;
+  }
+  
+  .card-header {
+    background-color: #007bff;
+  }
+  
+  .interest-tile {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .interest-tile:hover {
+    background-color: #f5c6cb;
+  }
+  
+  .input-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-select {
+    margin-right: 0.5rem;
+  }
+  
+  .selected-interests-grid {
+    margin-top: 1rem;
+  }
+  

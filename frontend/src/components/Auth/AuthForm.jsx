@@ -25,7 +25,9 @@ const AuthForm = () => {
 
   // new changes to be added
   const sendRequest = async (operationName, payload) => {
-    const targetUrl = `https://identitytoolkit.googleapis.com/v1/accounts:${operationName}?key=AIzaSyDCUkZQw4kcRhlZPru0_tSXf68cstvkcAg`;
+    const targetUrl = isLogin
+      ? 'http://localhost:5000/login'
+      : 'http://localhost:5000/signup';
   
     try {
       setIsLoading(true);
@@ -39,34 +41,17 @@ const AuthForm = () => {
   
       if (res.ok) {
         const data = await res.json();
-        setIsLoading(false);
-        const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
-  
-        if (!isLogin) {
-          const userData = {
-            //userId: data.localId,
-            email: payload.email,
-            password: payload.password,
-            fullname: payload.fullname,
-            username: payload.username,
-            date_of_birth: payload.date_of_birth,
-            location: payload.location,
-          };
-          console.log('User data:', userData);
+        console.log('Received data:', data);
+
+        console.log("Server response expiresIn:", data.expiresIn);
+
+        // Calculate the expiration time using expiresIn from your server response
+        const expirationTime = new Date(Date.now() + (+data.expiresIn * 1000));
 
   
-          // Send user data to your server
-          //Replace 'http://localhost:5000/api/users/register' with your actual server URL.
-          await fetch('http://localhost:5000/signup', {
-            method: 'POST',
-            body: JSON.stringify(userData),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-        }
-  
-        authCtx.login(data.idToken, expirationTime.toISOString());
+        // authCtx.login(data.token, expirationTime.toISOString());
+        authCtx.login(data.token, data.userId, expirationTime.toISOString());
+
         history.replace('/');
       } else {
         const { error } = await res.json();
@@ -78,6 +63,9 @@ const AuthForm = () => {
       alert(err.message);
     }
   };
+  
+  
+  
   //end of the new changes 
 
   const submitHandler = (event) => {
@@ -89,7 +77,6 @@ const AuthForm = () => {
     let userPayload = {
       email: enteredEmail,
       password: enteredPassword,
-      returnSecureToken: true,
     };
   
     if (!isLogin) {
@@ -107,12 +94,10 @@ const AuthForm = () => {
       };
     }
   
-    if (isLogin) {
-      sendRequest('signInWithPassword', userPayload);
-    } else {
-      sendRequest('signUp', userPayload);
-    }
+    sendRequest(isLogin ? 'login' : 'signup', userPayload);
   };
+  
+  
   
   
 
