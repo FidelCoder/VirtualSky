@@ -1,8 +1,12 @@
 import { useState, useRef, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-
+import InterestSelection from '../InterestSelection/InterestModel';
 import classes from './AuthForm.module.css';
 import AuthContext from '../../store/auth-context';
+
+import axios from 'axios';
+
+
 
 const AuthForm = () => {
   const history = useHistory();
@@ -16,6 +20,7 @@ const AuthForm = () => {
 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [showInterestSelection, setShowInterestSelection] = useState(false);
 
   const authCtx = useContext(AuthContext);
 
@@ -23,52 +28,26 @@ const AuthForm = () => {
     setIsLogin((prevState) => !prevState);
   };
 
-  // new changes to be added
-  const sendRequest = async (operationName, payload) => {
-    const targetUrl = isLogin
-      ? 'http://localhost:5000/login'
-      : 'http://localhost:5000/signup';
+// 
+  const onInterestSelected = async (selectedInterests) => {
+    console.log('Selected interests:', selectedInterests);
+    setShowInterestSelection(false);
   
+    // Save interests in the database
     try {
-      setIsLoading(true);
-      const res = await fetch(targetUrl, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      await axios.post(`/api/users/${authCtx.userId}/interests`, {
+        interests: selectedInterests,
       });
   
-      if (res.ok) {
-        const data = await res.json();
-        console.log('Received data:', data);
-
-        console.log("Server response expiresIn:", data.expiresIn);
-
-        // Calculate the expiration time using expiresIn from your server response
-        const expirationTime = new Date(Date.now() + (+data.expiresIn * 1000));
-
-  
-        // authCtx.login(data.token, expirationTime.toISOString());
-        authCtx.login(data.token, data.userId, expirationTime.toISOString());
-
-        history.replace('/');
-      } else {
-        const { error } = await res.json();
-        const errorMessage = error?.message || 'Authentication failed!';
-        setIsLoading(false);
-        throw new Error(errorMessage);
-      }
-    } catch (err) {
-      alert(err.message);
+      // Redirect to the homepage
+      history.replace('/');
+    } catch (error) {
+      console.error('Error saving interests:', error);
     }
   };
-  
-  
-  
-  //end of the new changes 
+  // 
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
   
     const enteredEmail = emailInputRef.current.value;
@@ -94,10 +73,45 @@ const AuthForm = () => {
       };
     }
   
-    sendRequest(isLogin ? 'login' : 'signup', userPayload);
+    try {
+      setIsLoading(true);
+      const res = await fetch(isLogin ? 'http://localhost:5000/login' : 'http://localhost:5000/signup', {
+        method: 'POST',
+        body: JSON.stringify(userPayload),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (res.ok) {
+        const data = await res.json();
+        console.log('Received data:', data);
+        const expirationTime = new Date(Date.now() + (+data.expiresIn * 1000));
+    
+        // Store the user ID in localStorage
+        localStorage.setItem('userId', data.userId);
+        console.log('User ID stored in localStorage:', data.userId);
+
+    
+        authCtx.login(data.token, data.userId, expirationTime.toISOString());
+    
+        if (!isLogin) {
+          history.push('/interest-selection');
+        } else {
+          history.replace('/');
+        }
+      } else {
+        const { error } = await res.json();
+        const errorMessage = error?.message || 'Authentication failed!';
+        setIsLoading(false);
+        throw new Error(errorMessage);
+      }
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
-  
-  
   
   
 
@@ -114,26 +128,26 @@ const AuthForm = () => {
   
             <div className={classes.control}>
               <label htmlFor='username'>Your Username</label>
-              <input type='text' id='username' placeholder='username' required ref={userNameInputRef} />
+              <input type='text' id='username' placeholder='username' required ref={              userNameInputRef} />
             </div>
-  
+
             <div className={classes.control}>
               <label htmlFor='location'>Your Country</label>
               <input type='text' id='location' placeholder='Country' required ref={locationInputRef} />
             </div>
-  
+
             <div className={classes.control}>
               <label htmlFor='date_of_birth'>Date Of Birth</label>
               <input type='date' id='date_of_birth' placeholder='Date Of Birth' required ref={dateBirthInputRef} />
             </div>
           </>
         )}
-  
+
         <div className={classes.control}>
           <label htmlFor='email'>Your Email</label>
           <input type='email' id='email' placeholder='Email' required ref={emailInputRef} />
         </div>
-  
+
         <div className={classes.control}>
           <label htmlFor='password'>Your Password</label>
           <input type='password' id='password' placeholder='password' required ref={passwordInputRef} />
@@ -150,8 +164,16 @@ const AuthForm = () => {
           </button>
         </div>
       </form>
+
+      {showInterestSelection && (
+        <InterestSelection
+          onRequestClose={() => setShowInterestSelection(false)}
+          onInterestSelected={onInterestSelected}
+          userId={showInterestSelection} //added the new line
+        />
+      )}
     </section>
   );
 };
-  
-  export default AuthForm;  
+
+export default AuthForm;

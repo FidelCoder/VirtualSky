@@ -13,6 +13,8 @@ import AuthContext from './store/auth-context';
 import About from './pages/About';
 import Contact from './pages/Contact';
 
+import InterestSelectionPage from './pages/InterestSelectionPage';
+
 const myCache = createCache({ key: 'my-prefix-key' });
 
 function App() {
@@ -46,6 +48,8 @@ function App() {
           {/*  */}
           <Route path='/about' component={About} />
           <Route path='/contact' component={Contact} />
+
+          <Route path="/interest-selection" component={InterestSelectionPage} />
 
           <Route path='*'>
             <Redirect to='/' />
