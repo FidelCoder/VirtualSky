@@ -35,7 +35,7 @@ const AuthForm = () => {
   
     // Save interests in the database
     try {
-      await axios.post(`https://node-express-vercel-rose.vercel.app/api/users/${authCtx.userId}/interests`, {
+      await axios.post(`https://virtual-sky-servers-dkix.vercel.app/api/users/${authCtx.userId}/interests`, {
         interests: selectedInterests,
       });
   
@@ -75,7 +75,7 @@ const AuthForm = () => {
   
     try {
       setIsLoading(true);
-      const res = await fetch(isLogin ? 'https://node-express-vercel-rose.vercel.app/login' : 'https://node-express-vercel-rose.vercel.app/signup', {
+      const res = await fetch(isLogin ? 'https://virtual-sky-servers-dkix.vercel.app/login' : 'https://virtual-sky-servers-dkix.vercel.app/signup', {
         method: 'POST',
         body: JSON.stringify(userPayload),
         headers: {
