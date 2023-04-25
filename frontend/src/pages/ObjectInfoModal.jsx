@@ -82,7 +82,7 @@ const InterestSelection = ({ onInterestSelected }) => {
     onInterestSelected(selectedInterests);
 
     try {
-      await axios.post('http://localhost:5000/api/interests', {
+      await axios.post('https://virtual-sky-servers.vercel.app/api/interests', {
         interests: selectedInterests,
       });
     } catch (error) {
