@@ -18,7 +18,7 @@ const ProfileForm = () => {
     try {
       console.log("Sending request to fetch user data");
 
-      const response = await fetch(`http://localhost:5000/api/users/${authCtx.userId}`);
+      const response = await fetch(`https://virtual-sky-servers-dkix-a39qz91nk-griffins-sys254.vercel.app/api/users/${authCtx.userId}`);
 
       console.log("Received response:", response);
 
