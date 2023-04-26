@@ -35,7 +35,7 @@ const AuthForm = () => {
   
     // Save interests in the database
     try {
-      await axios.post(`https://virtual-sky-servers-dkix.vercel.app/api/users/${authCtx.userId}/interests`, {
+      await axios.post(`https://virtual-sky-servers-dkix-a39qz91nk-griffins-sys254.vercel.app/api/users/${authCtx.userId}/interests`, {
         interests: selectedInterests,
       });
   
@@ -141,7 +141,7 @@ const AuthForm = () => {
   
     try {
       setIsLoading(true);
-      const res = await axios.post(isLogin ? 'https://virtual-sky-servers-dkix.vercel.app/login' : 'https://virtual-sky-servers-dkix.vercel.app/signup', userPayload);
+      const res = await axios.post(isLogin ? 'https://virtual-sky-servers-dkix-a39qz91nk-griffins-sys254.vercel.app//login' : 'https://virtual-sky-servers-dkix-a39qz91nk-griffins-sys254.vercel.app/signup', userPayload);
   
       const data = res.data;
       console.log('Received data:', data);
