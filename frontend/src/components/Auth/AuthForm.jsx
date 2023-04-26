@@ -47,6 +47,72 @@ const AuthForm = () => {
   };
   // 
 
+  // const submitHandler = async (event) => {
+  //   event.preventDefault();
+  
+  //   const enteredEmail = emailInputRef.current.value;
+  //   const enteredPassword = passwordInputRef.current.value;
+  
+  //   let userPayload = {
+  //     email: enteredEmail,
+  //     password: enteredPassword,
+  //   };
+  
+  //   if (!isLogin) {
+  //     const enteredFullname = fullNameInputRef.current.value;
+  //     const enteredUsername = userNameInputRef.current.value;
+  //     const enteredDatebirth = dateBirthInputRef.current.value;
+  //     const enteredLocation = locationInputRef.current.value;
+  
+  //     userPayload = {
+  //       ...userPayload,
+  //       fullname: enteredFullname,
+  //       username: enteredUsername,
+  //       date_of_birth: enteredDatebirth,
+  //       location: enteredLocation,
+  //     };
+  //   }
+  
+  //   try {
+  //     setIsLoading(true);
+  //     const res = await fetch(isLogin ? 'https://virtual-sky-servers-dkix.vercel.app/login' : 'https://virtual-sky-servers-dkix.vercel.app/signup', {
+  //       method: 'POST',
+  //       body: JSON.stringify(userPayload),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+  
+  //     if (res.ok) {
+  //       const data = await res.json();
+  //       console.log('Received data:', data);
+  //       const expirationTime = new Date(Date.now() + (+data.expiresIn * 1000));
+    
+  //       // Store the user ID in localStorage
+  //       localStorage.setItem('userId', data.userId);
+  //       console.log('User ID stored in localStorage:', data.userId);
+
+    
+  //       authCtx.login(data.token, data.userId, expirationTime.toISOString());
+    
+  //       if (!isLogin) {
+  //         history.push('/interest-selection');
+  //       } else {
+  //         history.replace('/');
+  //       }
+  //     } else {
+  //       const { error } = await res.json();
+  //       const errorMessage = error?.message || 'Authentication failed!';
+  //       setIsLoading(false);
+  //       throw new Error(errorMessage);
+  //     }
+  //   } catch (err) {
+  //     alert(err.message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+  
   const submitHandler = async (event) => {
     event.preventDefault();
   
@@ -75,44 +141,30 @@ const AuthForm = () => {
   
     try {
       setIsLoading(true);
-      const res = await fetch(isLogin ? 'https://virtual-sky-servers-dkix.vercel.app/login' : 'https://virtual-sky-servers-dkix.vercel.app/signup', {
-        method: 'POST',
-        body: JSON.stringify(userPayload),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const res = await axios.post(isLogin ? 'https://virtual-sky-servers-dkix.vercel.app/login' : 'https://virtual-sky-servers-dkix.vercel.app/signup', userPayload);
   
-      if (res.ok) {
-        const data = await res.json();
-        console.log('Received data:', data);
-        const expirationTime = new Date(Date.now() + (+data.expiresIn * 1000));
-    
-        // Store the user ID in localStorage
-        localStorage.setItem('userId', data.userId);
-        console.log('User ID stored in localStorage:', data.userId);
-
-    
-        authCtx.login(data.token, data.userId, expirationTime.toISOString());
-    
-        if (!isLogin) {
-          history.push('/interest-selection');
-        } else {
-          history.replace('/');
-        }
+      const data = res.data;
+      console.log('Received data:', data);
+      const expirationTime = new Date(Date.now() + (+data.expiresIn * 1000));
+  
+      // Store the user ID in localStorage
+      localStorage.setItem('userId', data.userId);
+      console.log('User ID stored in localStorage:', data.userId);
+  
+      authCtx.login(data.token, data.userId, expirationTime.toISOString());
+  
+      if (!isLogin) {
+        history.push('/interest-selection');
       } else {
-        const { error } = await res.json();
-        const errorMessage = error?.message || 'Authentication failed!';
-        setIsLoading(false);
-        throw new Error(errorMessage);
+        history.replace('/');
       }
     } catch (err) {
-      alert(err.message);
+      const errorMessage = err.response?.data?.message || 'Authentication failed!';
+      alert(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
-  
   
 
   return (
