@@ -38,7 +38,7 @@ const InterestSelectionPage = ({ onInterestSelected }) => {
     
       try {
         const response = await axios.post(
-          `https://virtual-sky-servers-dkix.vercel.app/api/users/${userId}/interests`,
+          `https://virtual-sky-servers-dkix-gdxz6zit7-griffins-sys254.vercel.app/api/users/${userId}/interests`,
           {
             interests: selectedInterests,
           }
