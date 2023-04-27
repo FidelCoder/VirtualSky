@@ -29,26 +29,33 @@ const InterestSelectionPage = ({ onInterestSelected }) => {
     };
   
     const handleSubmit = async (event) => {
-        event.preventDefault();
-      
-        console.log("Submitting interests:", selectedInterests); // Add this line to debug
-
-        const userId = localStorage.getItem('userId');
-        console.log('User ID retrieved from localStorage:', userId);
-
-      
-        try {
-          const response = await axios.post(`https://virtual-sky-servers-dkix.vercel.app/api/users/${userId}/interests`, {
+      event.preventDefault();
+    
+      console.log("Submitting interests:", selectedInterests);
+    
+      const userId = localStorage.getItem("userId");
+      console.log("User ID retrieved from localStorage:", userId);
+    
+      try {
+        const response = await axios.post(
+          `http://localhost:5000/api/users/${userId}/interests`,
+          {
             interests: selectedInterests,
-          });
-      
-          console.log("API response:", response); // Add this line to debug
-      
-          history.push("/profile");
-        } catch (error) {
-          console.error("Error saving interests:", error);
-        }
-      };
+          }
+        );
+    
+        console.log("API response:", response);
+    
+        // You can access the updated user data from the response
+        const updatedUser = response.data.user;
+        console.log("Updated user data:", updatedUser);
+    
+        history.push("/profile");
+      } catch (error) {
+        console.error("Error saving interests:", error);
+      }
+    };
+    
       
       
 
