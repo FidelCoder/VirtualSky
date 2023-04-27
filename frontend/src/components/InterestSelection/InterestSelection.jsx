@@ -8,7 +8,7 @@ const InterestSelection = () => {
 
   const fetchUserInterests = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/users/${userId}/interests`);
+      const response = await axios.get(`https://virtual-sky-servers-dkix.vercel.app/api/users/${userId}/interests`);
       console.log("API response data:", response.data); // Debug line
       setUserInterests(response.data);
     } catch (error) {
