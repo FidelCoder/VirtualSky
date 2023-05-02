@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { getSignByDate } from 'zodiac-signs';
-import "./visualization.css";
+import './visualization.css';
 
 const BirthInfoForm = ({ onSubmit }) => {
   const [birthDate, setBirthDate] = useState('');
@@ -44,18 +44,6 @@ const SkyVisualization = () => {
     setAstroReport(report);
   };
 
-  const models = [
-    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
-    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
-    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
-  ];
-
-  const modelPositions = models.map((_, index) => {
-    const angle = (Math.PI * 2 * index) / models.length;
-    const radius = 5;
-    return [Math.cos(angle) * radius, 0, Math.sin(angle) * radius];
-  });
-
   useEffect(() => {
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -65,6 +53,18 @@ const SkyVisualization = () => {
     camera.position.z = 10;
 
     const scene = new THREE.Scene();
+
+    // Skybox
+    const loader = new THREE.CubeTextureLoader();
+    const skyboxTexture = loader.load([
+      'path/to/px.jpg',
+      'path/to/nx.jpg',
+      'path/to/py.jpg',
+      'path/to/ny.jpg',
+      'path/to/pz.jpg',
+      'path/to/nz.jpg',
+    ]);
+    scene.background = skyboxTexture;
 
     // Adding stars
     const starsGeometry = new THREE.Geometry();
@@ -79,51 +79,64 @@ const SkyVisualization = () => {
     const starField = new THREE.Points(starsGeometry, starsMaterial);
     scene.add(starField);
 
-// Adding celestial objects
-models.forEach((modelPath, index) => {
-  const position = modelPositions[index];
-  const scale = [0.5, 0.5, 0.5];
-  loadModel(modelPath, position, scale, scene);
-});
-
-// Adding lighting
-const pointLight = new THREE.PointLight(0xffffff, 0.5);
-pointLight.position.set(5, 5, 0);
-scene.add(pointLight);
-
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambientLight);
-
-// Adding OrbitControls
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0, 0);
-
-const animate = () => {
-  requestAnimationFrame(animate);
-
-  controls.update();
-  renderer.render(scene, camera);
-};
-
-animate();
-
-return () => {
-  document.body.removeChild(renderer.domElement);
-  window.cancelAnimationFrame(animate);
-};
-}, []);
-
-return (
-  <div>
-    <BirthInfoForm onSubmit={generateAstroReport} />
-    {astroReport && (
-      <div className="report-container">
-        <h2>Astrological Report</h2>
-        <pre>{JSON.stringify(astroReport, null, 2)}</pre>
+    // Adding celestial objects
+    const models = [
+      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
+      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
+      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
+    ];
+    
+    const modelPositions = models.map((_, index) => {
+      const angle = (Math.PI * 2 * index) / models.length;
+      const radius = 5;
+      return [Math.cos(angle) * radius, 0, Math.sin(angle) * radius];
+    });
+    
+    models.forEach((modelPath, index) => {
+      const position = modelPositions[index];
+      const scale = [0.5, 0.5, 0.5];
+      loadModel(modelPath, position, scale, scene);
+    });
+    
+    // Adding lighting
+    const pointLight = new THREE.PointLight(0xffffff, 0.5);
+    pointLight.position.set(5, 5, 0);
+    scene.add(pointLight);
+    
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    
+    // Adding OrbitControls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0, 0);
+    
+    const animate = () => {
+      requestAnimationFrame(animate);
+    
+      controls.update();
+      renderer.render(scene, camera);
+    };
+    
+    animate();
+    
+    return () => {
+      document.body.removeChild(renderer.domElement);
+      window.cancelAnimationFrame(animate);
+    };
+    }, []);
+    
+    return (
+      <div>
+        <BirthInfoForm onSubmit={generateAstroReport} />
+        {astroReport && (
+          <div className="report-container">
+            <h2>Astrological Report</h2>
+            <pre>{JSON.stringify(astroReport, null, 2)}</pre>
+          </div>
+        )}
       </div>
-    )}
-  </div>
-);
-};
-
-export default SkyVisualization;
+    );
+    };
+    
+    export default SkyVisualization;
+    

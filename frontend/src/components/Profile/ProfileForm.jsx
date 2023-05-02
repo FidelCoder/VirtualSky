@@ -6,7 +6,14 @@ import AuthContext from "../../store/auth-context";
 
 import InterestSelection from "../InterestSelection/InterestSelection"
 
+import AstrologyDataDisplay from '../AstrologicalSign/AstrologyDataDisplay';
+
+import DailyHoroscope from '../AstrologicalSign/DailyHoroscope'
+
 const ProfileForm = () => {
+  const RAPIDAPI_KEY = 'your-rapidapi-key';
+  const [sunSign, setSunSign] = useState(null); // Add this line
+
   const history = useHistory();
 
   const passwordInputRef = useRef();
@@ -18,7 +25,7 @@ const ProfileForm = () => {
     try {
       console.log("Sending request to fetch user data");
 
-      const response = await fetch(`https://virtual-sky-servers-dkix-gdxz6zit7-griffins-sys254.vercel.app/api/users/${authCtx.userId}`);
+      const response = await fetch(`http://localhost:5000/api/users/${authCtx.userId}`);
 
       console.log("Received response:", response);
 
@@ -121,9 +128,16 @@ const ProfileForm = () => {
         <div className={classes.interests_title}>Interests</div>
         <InterestSelection />
       </div>
+      
+      <div className={classes.interests}>
+        <div className={classes.interests_title}>Astrological Sign</div>
+        <AstrologyDataDisplay dateOfBirth={userData.date_of_birth} onSunSignFetched={setSunSign} />
+      </div>
+      <DailyHoroscope sunSign={sunSign} apiKey={RAPIDAPI_KEY} />
+      
     </div>
   );
-  
+    
   
 }
 

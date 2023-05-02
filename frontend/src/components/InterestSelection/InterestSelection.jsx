@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, CardHeader, CardBody } from "reactstrap";
+import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "reactstrap";
 import axios from "axios";
+import generateCourses from "../../pages/openai";
 
-const InterestSelection = () => {
+const InterestSelection = ({ setGeneratedCourseData, setSelectedInterests }) => {
   const [userInterests, setUserInterests] = useState([]);
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
 
   const fetchUserInterests = async () => {
     try {
-      const response = await axios.get(`https://virtual-sky-servers-dkix-gdxz6zit7-griffins-sys254.vercel.app/api/users/${userId}/interests`);
-      console.log("API response data:", response.data); // Debug line
+      const response = await axios.get(`http://localhost:5000/api/users/${userId}/interests`);
+      console.log("API response data:", response.data);
       setUserInterests(response.data);
     } catch (error) {
-      console.error('Error fetching interests:', error);
+      console.error("Error fetching interests:", error);
     }
   };
-  
 
   useEffect(() => {
     fetchUserInterests();
   }, []);
 
-  useEffect(() => {
-    console.log("Updated userInterests:", userInterests); // Debug line
-  }, [userInterests]);
+  const createMyCourses = async () => {
+    const interests = userInterests.map((interestObj) => interestObj.interest);
+    const newGeneratedCourses = await generateCourses(interests);
+    setGeneratedCourseData(newGeneratedCourses);
+    setSelectedInterests(interests);
+  };
 
   return (
     <Container className="mt-5">
@@ -48,6 +51,11 @@ const InterestSelection = () => {
               </Col>
             ))}
           </Row>
+          <div className="text-center mt-4">
+            <Button color="primary" onClick={createMyCourses}>
+              Create My Courses
+            </Button>
+          </div>
         </CardBody>
       </Card>
     </Container>

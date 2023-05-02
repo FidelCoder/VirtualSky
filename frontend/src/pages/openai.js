@@ -18,7 +18,8 @@ const generateCourses = async (interests, retries = 3) => {
         headers: {
           "Content-Type": "application/json",
           //Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-          Authorization: `Bearer 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`
+          //Authorization: `Bearer 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`
+          Authorization: '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'
         },
       }
     );
