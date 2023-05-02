@@ -71,3 +71,25 @@
   font-size: 0.8rem;
 } */
 
+.course-card {
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+}
+
+.course-card-body {
+  padding: 1rem;
+}
+
+.course-card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0;
+  color: #333;
+}

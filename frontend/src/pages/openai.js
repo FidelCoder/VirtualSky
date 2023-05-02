@@ -3,8 +3,8 @@ import axios from 'axios';
 const generateCourses = async (interests, retries = 3) => {
   try {
     const response = await axios.post(
-      "https://api.openai.com/v1/engines/gpt-3.5-turbo/completions",
-      //"https://api.openai.com/v1/engines/text-davinci-002/completions",
+      //"https://api.openai.com/v1/engines/gpt-3.5-turbo/completions",
+      "https://api.openai.com/v1/engines/text-davinci-002/completions",
       {
         prompt: `Generate two good courses based on the following interests: ${interests.join(
           ", "
@@ -19,7 +19,7 @@ const generateCourses = async (interests, retries = 3) => {
           "Content-Type": "application/json",
           //Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
           //Authorization: `Bearer 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`
-          Authorization: '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'
+          Authorization: 'Bearer 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'
         },
       }
     );

@@ -3,6 +3,8 @@ import { Container, Row, Col } from "reactstrap";
 import axios from "axios";
 import generateCourses from "../pages/openai";
 import InterestSelection from "../components/InterestSelection/InterestSelection";
+import "./ObjectInfoModal.css";
+
 const FreeCourse = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [generatedCourseData, setGeneratedCourseData] = useState([]);
@@ -28,7 +30,7 @@ const FreeCourse = () => {
   return (
     <section id="free-course">
       <Container>
-      <InterestSelection
+        <InterestSelection
           setGeneratedCourseData={setGeneratedCourseData}
           setSelectedInterests={setSelectedInterests}
         />
@@ -56,7 +58,11 @@ const FreeCourse = () => {
 
           {filteredCourses.map((item) => (
             <Col lg="3" md="4" className="mb-4" key={item.id}>
-              {/* Render your course card here */}
+              <div className="course-card">
+                <div className="course-card-body">
+                  <h5 className="course-card-title">{item.title}</h5>
+                </div>
+              </div>
             </Col>
           ))}
         </Row>
