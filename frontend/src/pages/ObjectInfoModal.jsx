@@ -1,28 +1,76 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col } from "reactstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Modal,
+  ModalHeader,
+} from "reactstrap";
 import axios from "axios";
-import generateCourses from "../pages/openai";
 import InterestSelection from "../components/InterestSelection/InterestSelection";
 import "./ObjectInfoModal.css";
+
+const generateCourses = async (interests, token, retries = 3) => {
+  try {
+    const response = await axios.post(
+      'http://localhost:5000/generateCourses',
+      {
+        interests: interests,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Use the token from local storage
+        },
+      }
+    );
+
+    const generatedCourses = response.data.courses;
+
+    console.log('Generated courses:', generatedCourses);
+
+    return generatedCourses.map((course) => ({
+      id: Math.random().toString(36).substr(2, 9),
+      title: course,
+    }));
+  } catch (error) {
+    console.error("Error generating courses:", error);
+
+    if (retries > 0) {
+      console.log(`Retrying... attempts left: ${retries}`);
+      return generateCourses(interests, token, retries - 1);
+    } else {
+      console.log("Failed after multiple retries");
+      return [];
+    }
+  }
+};
+
 
 const FreeCourse = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [generatedCourseData, setGeneratedCourseData] = useState([]);
   const [selectedInterests, setSelectedInterests] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
+  const handleExploreDomain = () => {
+    setShowModal(true);
+  };
+
   useEffect(() => {
     if (selectedInterests.length > 0) {
       (async () => {
-        const newGeneratedCourses = await generateCourses(selectedInterests);
+        const token = localStorage.getItem("token"); // Get the token from local storage
+        const newGeneratedCourses = await generateCourses(selectedInterests, token);
         setGeneratedCourseData(newGeneratedCourses);
       })();
     }
   }, [selectedInterests]);
-
+  
   const filteredCourses = generatedCourseData.filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -33,6 +81,7 @@ const FreeCourse = () => {
         <InterestSelection
           setGeneratedCourseData={setGeneratedCourseData}
           setSelectedInterests={setSelectedInterests}
+          onExploreDomain={handleExploreDomain}
         />
         <Row>
           <Col lg="12" className="text-center mb-5">
@@ -66,7 +115,36 @@ const FreeCourse = () => {
             </Col>
           ))}
         </Row>
-      </Container>
+
+        <Modal isOpen={showModal} toggle={() => setShowModal(false)}>
+  <ModalHeader toggle={() => setShowModal(false)}>Generated Courses</ModalHeader>
+  <div className="modal-body">
+    {generatedCourseData.map((course) => (
+      <p key={course.id}>{course.title}</p>
+    ))}
+  </div>
+  <div className="modal-footer">
+    <button
+      className="btn btn-primary"
+      onClick={() => {
+        // Save courses to the database
+        setShowModal(false);
+      }}
+    >
+      Accept
+    </button>
+    <button
+      className="btn btn-secondary"
+      onClick={() => {
+        // Don't save courses to the database
+        setShowModal(false);
+      }}
+    >
+      Reject
+    </button>
+  </div>
+</Modal>
+</Container>
     </section>
   );
 };
