@@ -35,6 +35,8 @@ const loadModel = (modelPath, position, scale, scene) => {
 
 const SkyVisualization = () => {
   const [astroReport, setAstroReport] = useState(null);
+  const [theme, setTheme] = useState("light");
+
 
   const generateAstroReport = (birthDate) => {
     const dateArray = birthDate.split('-').map((x) => parseInt(x, 10));
@@ -43,7 +45,9 @@ const SkyVisualization = () => {
     const report = getSignByDate(year, month, day);
     setAstroReport(report);
   };
-
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
   useEffect(() => {
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -67,24 +71,58 @@ const SkyVisualization = () => {
     scene.background = skyboxTexture;
 
     // Adding stars
-    const starsGeometry = new THREE.Geometry();
-    for (let i = 0; i < 10000; i++) {
-      const star = new THREE.Vector3();
-      star.x = THREE.MathUtils.randFloatSpread(2000);
-      star.y = THREE.MathUtils.randFloatSpread(2000);
-      star.z = THREE.MathUtils.randFloatSpread(2000);
-      starsGeometry.vertices.push(star);
-    }
-    const starsMaterial = new THREE.PointsMaterial({ color: 0x888888 });
-    const starField = new THREE.Points(starsGeometry, starsMaterial);
-    scene.add(starField);
+    // const starsGeometry = new THREE.Geometry();
+    // for (let i = 0; i < 10000; i++) {
+    //   const star = new THREE.Vector3();
+    //   star.x = THREE.MathUtils.randFloatSpread(2000);
+    //   star.y = THREE.MathUtils.randFloatSpread(2000);
+    //   star.z = THREE.MathUtils.randFloatSpread(2000);
+    //   starsGeometry.vertices.push(star);
+    // }
+    // const starsMaterial = new THREE.PointsMaterial({ color: 0x888888 });
+    // const starField = new THREE.Points(starsGeometry, starsMaterial);
+    // scene.add(starField);
+    // Adding stars
+const starsGeometry = new THREE.BufferGeometry();
+const starsVertices = [];
+for (let i = 0; i < 10000; i++) {
+  const star = new THREE.Vector3();
+  star.x = THREE.MathUtils.randFloatSpread(2000);
+  star.y = THREE.MathUtils.randFloatSpread(2000);
+  star.z = THREE.MathUtils.randFloatSpread(2000);
+  starsVertices.push(star.x, star.y, star.z);
+}
+const starsVerticesArray = new Float32Array(starsVertices);
+starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVerticesArray, 3));
+const starsMaterial = new THREE.PointsMaterial({ color: 0x888888 });
+const starField = new THREE.Points(starsGeometry, starsMaterial);
+scene.add(starField);
+
 
     // Adding celestial objects
+    // const models = [
+    //  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
+    //   'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
+    //   'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
+    // ];
+
     const models = [
-      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
-      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
-      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF/Duck.gltf',
+      'models/Costellations.gltf',
+      'models/Jupiter_planet.gltf',
+      'models/Mercury_planet.gltf',
+      'models/Neptune_planet.gltf',
+      'models/Mars_planet.gltf',
+      'models/Pluto_planet.gltf',
+      'models/Saturn_planet.gltf',
+      'models/Uranus_planet.gltf',
+      'models/Venus_planet.gltf',
+      'models/Zodiac_archetypes.gltf',
+      'models/Zodiac_signs.gltf',
+      'models/Earth_planet.gltf',
+      'models/Clock_dial.gltf',
+
     ];
+    
     
     const modelPositions = models.map((_, index) => {
       const angle = (Math.PI * 2 * index) / models.length;
@@ -125,8 +163,24 @@ const SkyVisualization = () => {
     };
     }, []);
     
+    // return (
+    //   <div>
+    //     <BirthInfoForm onSubmit={generateAstroReport} />
+    //     {astroReport && (
+    //       <div className="report-container">
+    //         <h2>Astrological Report</h2>
+    //         <pre>{JSON.stringify(astroReport, null, 2)}</pre>
+    //       </div>
+    //     )}
+    //   </div>
+    // );
+    // };
+
     return (
-      <div>
+      <div className={`app ${theme}`}>
+        <button onClick={toggleTheme}>
+          {theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
+        </button>
         <BirthInfoForm onSubmit={generateAstroReport} />
         {astroReport && (
           <div className="report-container">
@@ -136,7 +190,6 @@ const SkyVisualization = () => {
         )}
       </div>
     );
-    };
+  };
     
     export default SkyVisualization;
-    

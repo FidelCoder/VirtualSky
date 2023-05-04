@@ -8,7 +8,7 @@ import UserProfile from './components/Profile/UserProfile';
 import AuthPage from './pages/AuthPage';
 import Home from './pages/Home';
 //import SkyVisualization from './pages/SkyVisualization';
-//import SkyVisualization from './pages/trial';
+import SkyVisualization from './pages/trial';
 import ObjectInfoModal from './pages/ObjectInfoModal'
 import AuthContext from './store/auth-context';
 import About from './pages/About';
@@ -43,9 +43,9 @@ function App() {
             {!authCtx.isLoggedIn && <Redirect to='/auth' />}
           </Route>
 
-          {/* <Route path='/visualization' exact>
+          <Route path='/visualization' exact>
             <SkyVisualization />
-          </Route> */}
+          </Route>
           {/*  */}
           <Route path='/about' component={About} />
           <Route path='/contact' component={Contact} />
