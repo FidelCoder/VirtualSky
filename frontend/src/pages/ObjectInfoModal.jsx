@@ -8,6 +8,7 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import InterestSelection from "../components/InterestSelection/InterestSelection";
+import CoursesList from "../components/Courses/CoursesList";
 import "./ObjectInfoModal.css";
 
 const generateCourses = async (interests, token, retries = 3) => {
@@ -67,6 +68,7 @@ const FreeCourse = () => {
         const token = localStorage.getItem("token"); // Get the token from local storage
         const newGeneratedCourses = await generateCourses(selectedInterests, token);
         setGeneratedCourseData(newGeneratedCourses);
+        setShowModal(true); // Show the modal after generating courses
       })();
     }
   }, [selectedInterests]);
@@ -75,17 +77,48 @@ const FreeCourse = () => {
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // //////////////////////////////////////
+  const saveCoursesToDatabase = async (courses) => {
+    try {
+      const token = localStorage.getItem('token'); // Get the token from local storage
+      const userId = localStorage.getItem('userId'); // Get the userId from local storage
+  
+      const response = await axios.post(
+        'http://localhost:5000/saveCourses',
+        {
+          courses: courses,
+          userId: userId,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Use the token from local storage
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        console.log('Courses saved successfully.');
+      } else {
+        console.error('Error saving courses:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error saving courses:', error);
+    }
+  };
+  
+
   return (
     <section id="free-course">
       <Container>
-        <InterestSelection
+      <InterestSelection
           setGeneratedCourseData={setGeneratedCourseData}
           setSelectedInterests={setSelectedInterests}
           onExploreDomain={handleExploreDomain}
         />
         <Row>
           <Col lg="12" className="text-center mb-5">
-            <h2 className="fw-bold">Our Courses</h2>
+            <h2 className="fw-bold">Courses Suggestions</h2>
           </Col>
 
           <Col lg="12" className="mb-4">
@@ -117,34 +150,41 @@ const FreeCourse = () => {
         </Row>
 
         <Modal isOpen={showModal} toggle={() => setShowModal(false)}>
-  <ModalHeader toggle={() => setShowModal(false)}>Generated Courses</ModalHeader>
-  <div className="modal-body">
-    {generatedCourseData.map((course) => (
-      <p key={course.id}>{course.title}</p>
-    ))}
-  </div>
-  <div className="modal-footer">
-    <button
-      className="btn btn-primary"
-      onClick={() => {
-        // Save courses to the database
-        setShowModal(false);
-      }}
-    >
-      Accept
-    </button>
-    <button
-      className="btn btn-secondary"
-      onClick={() => {
-        // Don't save courses to the database
-        setShowModal(false);
-      }}
-    >
-      Reject
-    </button>
-  </div>
-</Modal>
+          <ModalHeader toggle={() => setShowModal(false)}>
+            Generated Courses
+          </ModalHeader>
+          <div className="modal-body">
+            {generatedCourseData.map((course) => (
+              <p key={course.id}>{course.title}</p>
+            ))}
+          </div>
+          <div className="modal-footer">
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                saveCoursesToDatabase(generatedCourseData);
+                setShowModal(false);
+              }}
+            >
+              Accept
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                // Don't save courses to the database
+                setShowModal(false);
+              }}
+            >
+              Reject
+            </button>
+          </div>
+        </Modal>
+
 </Container>
+      <div>
+        <div>My Custom Courses</div>
+        <CoursesList />
+      </div>
     </section>
   );
 };
